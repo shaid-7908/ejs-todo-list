@@ -5,25 +5,34 @@ class TodoController {
       res.render("create-todo");
     } catch (error) {}
   }
+
+  //This code is to create a new Todo - create
   async createNewTodo(req, res) {
     try {
       const { task, description } = req.body;
+
       const todo = new Todo({ task, description });
       await todo.save();
+
       req.flash("success_msg", "Todo created successfully!");
       res.redirect("/todos"); // Redirect after creation
     } catch (error) {
       res.status(500).send("Error creating Todo: " + error.message);
     }
   }
+  
+  //This code is to read all todos from the database - read
   async displayTodos(req, res) {
     try {
+      //this code finds or returns all the records present in the db by latest creation time 
       const todos = await Todo.find().sort({ createdAt: -1 });
+
       res.render("todos", { todos });
     } catch (error) {
       res.status(500).send("Failed to load todos: " + err.message);
     }
   }
+
   async displayEditTodo(req, res) {
     try {
       const todo = await Todo.findById(req.params.id);
@@ -33,6 +42,8 @@ class TodoController {
       res.send("Error occured in update todo");
     }
   }
+
+  //This code helps to change the status of isCompleted between true and false - update
   async changeTodoStatus(req, res) {
     try {
       const todo = await Todo.findById(req.params.id);
@@ -46,6 +57,7 @@ class TodoController {
       console.log(error)
     }
   }
+
   async displayIncompleteTodos(req, res) {
     try {
       const todos = await Todo.find({ isCompleted: false });
@@ -76,6 +88,7 @@ class TodoController {
       res.status(500).send("Update failed");
     }
   }
+  //This code helps us to delete records from database - delete
   async deleteTodo(req, res) {
     try {
       await Todo.findByIdAndDelete(req.params.id);
