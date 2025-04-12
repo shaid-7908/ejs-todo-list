@@ -38,6 +38,7 @@ const PORT = 3009;
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGODB_URL, {
+    dbName: "the_todo_db",
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
